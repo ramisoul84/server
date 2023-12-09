@@ -7,9 +7,10 @@ import {
   Body,
   Param,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './entity/user.entity';
+import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -31,12 +32,7 @@ export class UsersController {
   @ApiResponse({ status: 200, type: User })
   @Get(':id')
   async getUserById(@Param('id') id: string) {
-    const user = await this.usersService.getUserById(id);
-    if (!user) {
-      throw new NotFoundException('User does not exist!');
-    } else {
-      return user;
-    }
+    return this.usersService.getUserById(id);
   }
 
   // create a new user
@@ -59,7 +55,7 @@ export class UsersController {
   }
 
   // delete a user
-  @ApiOperation({ summary: 'Update an existing user' })
+  @ApiOperation({ summary: 'Delete an existing user' })
   @ApiResponse({ status: 200, type: User })
   @Delete(':id')
   async deleteUser(@Param('id') id: string): Promise<any> {
