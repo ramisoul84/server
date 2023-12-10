@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { LoginUserDto } from '../users/dto/login-user.dto';
+import { SignupDto, LoginDto } from './auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/typeorm/entities/user.entity';
 import {
   HttpException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { HttpStatus } from '@nestjs/common/enums';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -17,12 +16,12 @@ export class AuthService {
     private readonly usersService: UsersService,
     private jwtService: JwtService,
   ) {}
-  async login(userDto: LoginUserDto) {
+  async login(userDto: LoginDto) {
     const user = await this.validateUser(userDto);
     return this.generateToken(user);
   }
 
-  async signup(userDto: CreateUserDto) {
+  async signup(userDto: SignupDto) {
     const exists = await this.usersService.getUserByEmail(userDto.email);
     if (exists)
       throw new HttpException('Such email is exisits', HttpStatus.BAD_REQUEST);
@@ -34,7 +33,7 @@ export class AuthService {
     return this.generateToken(user);
   }
 
-  private async validateUser(userDto: LoginUserDto) {
+  private async validateUser(userDto: LoginDto) {
     const user = await this.usersService.getUserByEmail(userDto.email);
     const compare = await bcrypt.compare(userDto.password, user.password);
     if (user && compare) {

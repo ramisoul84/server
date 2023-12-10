@@ -24,7 +24,7 @@ const bootstrap = async () => {
   const conf: ConfigService = app.get(ConfigService);
   const port: number = conf.get<number>('PORT');
   await app.listen(port, () => {
-    console.log('Server: ', `http://localhost:${port}`);
+    console.log('Server documentation : ', `http://localhost:${port}/api/docs`);
   });
 };
 

@@ -7,10 +7,9 @@ import {
   Body,
   Param,
   NotFoundException,
-  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './user.entity';
+import { User } from '../typeorm/entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 

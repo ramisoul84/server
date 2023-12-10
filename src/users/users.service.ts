@@ -1,7 +1,7 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from 'src/typeorm/entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
 
@@ -38,6 +38,7 @@ export class UsersService {
     userDto.created = new Date();
     const newUser = this.userRepository.create(userDto);
     await this.userRepository.save(newUser);
+    delete newUser.password;
     return newUser;
   }
 
