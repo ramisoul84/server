@@ -54,16 +54,18 @@ export class SignupDto {
 
 export class LoginDto {
   @ApiProperty({
+    example: 'user123@gmail.com',
+    description: 'Email',
     required: true,
-    description: 'E-Mail',
   })
   @IsString()
   @IsEmail()
   public readonly email: string;
 
   @ApiProperty({
-    required: true,
+    example: 'pass123*#',
     description: 'Password',
+    required: true,
   })
   @IsString()
   public readonly password: string;

@@ -16,8 +16,16 @@ export class AuthService {
     private readonly usersService: UsersService,
     private jwtService: JwtService,
   ) {}
+
   async login(userDto: LoginDto) {
-    const user = await this.validateUser(userDto);
+    const user = await this.usersService.getUserByEmail(userDto.email);
+    if (!user) {
+      throw new HttpException('No user found', HttpStatus.NOT_FOUND);
+    }
+    const validPassword = bcrypt.compare(userDto.password, user.password);
+    if (!validPassword) {
+      throw new HttpException('wrong password', HttpStatus.NOT_FOUND);
+    }
     return this.generateToken(user);
   }
 
@@ -33,14 +41,7 @@ export class AuthService {
     return this.generateToken(user);
   }
 
-  private async validateUser(userDto: LoginDto) {
-    const user = await this.usersService.getUserByEmail(userDto.email);
-    const compare = await bcrypt.compare(userDto.password, user.password);
-    if (user && compare) {
-      return user;
-    }
-  }
-
+  // Helper methods ..
   private async generateToken(user: User) {
     const payload = { email: user.email, id: user.id };
     return { token: this.jwtService.sign(payload) };
