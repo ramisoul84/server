@@ -22,7 +22,7 @@ export class AuthService {
     if (!user) {
       throw new HttpException('No user found', HttpStatus.NOT_FOUND);
     }
-    const validPassword = bcrypt.compare(userDto.password, user.password);
+    const validPassword = await bcrypt.compare(userDto.password, user.password);
     if (!validPassword) {
       throw new HttpException('wrong password', HttpStatus.NOT_FOUND);
     }
